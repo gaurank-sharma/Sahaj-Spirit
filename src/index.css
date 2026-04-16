@@ -1,0 +1,39 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-cream font-sans text-charcoal antialiased;
+  }
+
+  ::selection {
+    @apply bg-teal text-white;
+  }
+}
+
+@layer components {
+  .btn-outline {
+    @apply px-8 py-4 border border-current text-xs tracking-[0.2em] uppercase transition-all duration-300;
+  }
+
+  .btn-outline:hover {
+    @apply bg-charcoal text-white border-charcoal;
+  }
+
+  .btn-outline-light {
+    @apply px-8 py-4 border border-white/40 text-white text-xs tracking-[0.2em] uppercase transition-all duration-300;
+  }
+
+  .btn-outline-light:hover {
+    @apply bg-white text-charcoal;
+  }
+
+  .section-label {
+    @apply text-xs tracking-[0.35em] uppercase text-warm-gray;
+  }
+}
