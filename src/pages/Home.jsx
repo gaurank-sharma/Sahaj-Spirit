@@ -58,14 +58,13 @@ const coreFeelings = [
   },
 ];
 
-// Circle positions are % within the left column container (50vw wide on desktop)
-// Negative values let circles bleed off the edge intentionally
+// Desktop: size/top/left   |   Mobile: mSize/mTop/mLeft
 const floatCircles = [
-  { src: IMG.storytelling, size: 148, top: '7%', left: '25%'},
-  { src: IMG.poetry,       size: 148, top:  '15%', left: '49%'},
-  { src: IMG.interactive,  size: 148, top: '34%', left: '60%'},
-  { src: IMG.community,    size: 148, top: '55%', left: '49%'},
-  { src: IMG.hero,         size: 148, top: '64%', left: '25%'},
+  { src: IMG.storytelling, size: 148, top: '7%',  left: '25%', mSize: 85, mTop: '8%',  mLeft: '5%'  },
+  { src: IMG.poetry,       size: 148, top: '15%', left: '49%', mSize: 85, mTop: '5%',  mLeft: '52%' },
+  { src: IMG.interactive,  size: 148, top: '34%', left: '60%', mSize: 85, mTop: '32%', mLeft: '56%' },
+  { src: IMG.community,    size: 148, top: '55%', left: '49%', mSize: 85, mTop: '54%', mLeft: '48%' },
+  { src: IMG.hero,         size: 148, top: '64%', left: '25%', mSize: 85, mTop: '63%', mLeft: '5%'  },
 ];
 
 export default function Home() {
@@ -82,42 +81,42 @@ export default function Home() {
         {/* ── LEFT: Logo + floating circles ─────────────────── */}
         <div className="relative w-full lg:w-1/2 min-h-[75vh] lg:min-h-screen">
 
-          {/* Shift wrapper: push everything down on mobile so top circles don't clip */}
-          <div className="absolute inset-0 translate-y-14 lg:translate-y-0">
-
-            {/* Photo circles */}
-            {floatCircles.map(({ src, top, left }, i) => (
-              <div
-                key={i}
-                className="absolute z-20 w-[80px] h-[80px] lg:w-[148px] lg:h-[148px]"
-                style={{ top, left }}
-              >
-                <div
-                  className="w-full h-full rounded-full overflow-hidden border-[3px] lg:border-[4px] border-white"
-                  style={{ boxShadow: '0 6px 20px rgba(0,100,95,0.18)' }}
-                >
-                  <img src={src} alt="" className="w-full h-full object-cover object-center" />
-                </div>
+          {/* ── MOBILE circles (tune mSize / mTop / mLeft per item) ── */}
+          {floatCircles.map(({ src, mSize, mTop, mLeft }, i) => (
+            <div key={`m-${i}`} className="lg:hidden absolute z-20"
+              style={{ width: mSize, height: mSize, top: mTop, left: mLeft }}
+            >
+              <div className="w-full h-full rounded-full overflow-hidden border-[3px] border-white"
+                style={{ boxShadow: '0 6px 20px rgba(0,100,95,0.18)' }}>
+                <img src={src} alt="" className="w-full h-full object-cover object-center" />
               </div>
-            ))}
-
-            {/* Logo — mobile */}
-            <div
-              className="absolute z-10 w-[150px] h-[150px] lg:hidden"
-              style={{ top: '32%', left: '20%' }}
-            >
-              <img src="/logo.png" alt="Sahaj Spirit" className="w-full h-full object-contain" />
             </div>
+          ))}
 
-            {/* Logo — desktop */}
-            <div
-              className="absolute z-10 hidden lg:block w-[268px] h-[268px]"
-              style={{ top: '28%', left: '16%' }}
+          {/* ── DESKTOP circles (tune size / top / left per item) ── */}
+          {floatCircles.map(({ src, size, top, left }, i) => (
+            <div key={`d-${i}`} className="hidden lg:block absolute z-20"
+              style={{ width: size, height: size, top, left }}
             >
-              <img src="/logo.png" alt="Sahaj Spirit" className="w-full h-full object-contain" />
+              <div className="w-full h-full rounded-full overflow-hidden border-[4px] border-white"
+                style={{ boxShadow: '0 10px 36px rgba(0,100,95,0.18)' }}>
+                <img src={src} alt="" className="w-full h-full object-cover object-center" />
+              </div>
             </div>
+          ))}
 
+          {/* Logo — mobile (tune mLogoSize / mLogoTop / mLogoLeft below) */}
+          <div className="lg:hidden absolute z-10"
+            style={{ width: 150, height: 150, top: '30%', left: '18%' }}>
+            <img src="/logo.png" alt="Sahaj Spirit" className="w-full h-full object-contain" />
           </div>
+
+          {/* Logo — desktop */}
+          <div className="hidden lg:block absolute z-10"
+            style={{ width: 268, height: 268, top: '28%', left: '16%' }}>
+            <img src="/logo.png" alt="Sahaj Spirit" className="w-full h-full object-contain" />
+          </div>
+
         </div>
 
         {/* ── RIGHT: Text content ───────────────────────────── */}
