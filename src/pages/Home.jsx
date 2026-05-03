@@ -79,7 +79,7 @@ export default function Home() {
         }}
       >
         {/* ── LEFT: Logo + floating circles ─────────────────── */}
-        <div className="relative w-full lg:w-1/2 min-h-[75vh] lg:min-h-screen">
+        <div className="relative w-full lg:w-1/2 min-h-[62vh] lg:min-h-screen">
 
           {/* ── MOBILE circles (tune mSize / mTop / mLeft per item) ── */}
           {floatCircles.map(({ src, mSize, mTop, mLeft }, i) => (
