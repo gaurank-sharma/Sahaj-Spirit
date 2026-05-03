@@ -65,7 +65,7 @@ const floatCircles = [
   { src: IMG.poetry,       size: 148, top:  '15%', left: '49%'},
   { src: IMG.interactive,  size: 148, top: '34%', left: '60%'},
   { src: IMG.community,    size: 148, top: '55%', left: '49%'},
-  { src: IMG.hero,         size: 148, top: '67%', left: '25%'},
+  { src: IMG.hero,         size: 148, top: '64%', left: '25%'},
 ];
 
 export default function Home() {
