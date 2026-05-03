@@ -130,7 +130,7 @@ export default function Home() {
             {/* Badge */}
             <motion.p
               variants={fadeUp}
-              className="text-[10px] tracking-[0.48em] uppercase text-teal font-semibold mb-7"
+              className="text-[10px] tracking-[0.48em] uppercase text-teal font-semibold mb-7 text-center lg:text-left"
             >
               A Jain Youth Movement &nbsp;·&nbsp; Since 2024
             </motion.p>
@@ -138,7 +138,7 @@ export default function Home() {
             {/* Headline */}
             <motion.h1
               variants={fadeUp}
-              className="font-display text-[3.2rem] md:text-[4rem] lg:text-[4.8rem] xl:text-[5.4rem] text-charcoal leading-[1.03] mb-8"
+              className="font-display text-[3.2rem] md:text-[4rem] lg:text-[4.8rem] xl:text-[5.4rem] text-charcoal leading-[1.03] mb-8 text-center lg:text-left"
             >
               You are not broken.<br />
               You are just<br />
@@ -151,13 +151,12 @@ export default function Home() {
             {/* Body */}
             <motion.p
               variants={fadeUp}
-              className="text-charcoal/55 text-base md:text-[1.04rem] leading-relaxed max-w-[22rem] mb-11"
+              className="text-charcoal/55 text-base md:text-[1.04rem] leading-relaxed max-w-[22rem] mb-11 text-center lg:text-left mx-auto lg:mx-0"
             >
-            
             </motion.p>
 
             {/* CTAs */}
-            <motion.div variants={fadeUp} className="flex flex-wrap gap-5 items-center">
+            <motion.div variants={fadeUp} className="flex flex-wrap gap-5 items-center justify-center lg:justify-start">
               <Link
                 to="/sahaj-tour"
                 className="px-8 py-4 bg-orange text-white text-sm font-medium rounded-full transition-all duration-300 hover:brightness-110 hover:-translate-y-0.5"
