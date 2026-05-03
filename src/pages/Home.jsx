@@ -58,62 +58,158 @@ const coreFeelings = [
   },
 ];
 
+const floatCircles = [
+  { src: IMG.storytelling, size: 148, top: '5%',  left: '4%',  delay: 0.10, floatY: -14, floatDur: 4.1 },
+  { src: IMG.poetry,       size: 164, top: '3%',  left: '50%', delay: 0.25, floatY:  11, floatDur: 3.7 },
+  { src: IMG.interactive,  size: 158, top: '37%', left: '62%', delay: 0.40, floatY: -10, floatDur: 5.2 },
+  { src: IMG.community,    size: 155, top: '55%', left: '53%', delay: 0.20, floatY:  13, floatDur: 4.6 },
+  { src: IMG.hero,         size: 150, top: '66%', left: '7%',  delay: 0.35, floatY:  -8, floatDur: 3.5 },
+];
+
 export default function Home() {
   return (
     <main>
       {/* ─── HERO ─────────────────────────────────────────────── */}
-      <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-        <div className="absolute inset-0">
-          <img src={IMG.hero} alt="Sahaj community" className="w-full h-full object-cover object-top" />
-          {/* Base dark layer for readability */}
-          <div className="absolute inset-0 bg-black/50" />
-          {/* Gradient for depth */}
-          <div className="absolute inset-0 bg-gradient-to-b from-black/30 via-black/10 to-black/60" />
+      <section
+        className="relative min-h-screen flex flex-col lg:flex-row overflow-hidden"
+        style={{ background: '#F2F9F8' }}
+      >
+        {/* Teal watercolour blob — top-right */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 70% 65% at 88% 12%, rgba(0,125,120,0.14) 0%, rgba(26,173,167,0.07) 45%, transparent 68%)',
+            }}
+          />
+          <div
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 40% 35% at 95% 5%, rgba(204,232,226,0.55) 0%, transparent 60%)',
+            }}
+          />
         </div>
 
-        <motion.div
-          className="relative z-10 text-center text-white px-6 max-w-5xl mx-auto"
-          initial="hidden"
-          animate="visible"
-          variants={stagger}
-        >
-          <motion.p variants={fadeUp} className="text-[10px] tracking-[0.55em] uppercase text-white/60 mb-9 drop-shadow">
-            सहज &nbsp;·&nbsp; A Jain Youth Foundation Initiative
-          </motion.p>
-          <motion.h1
-            variants={fadeUp}
-            className="font-display font-light text-6xl md:text-8xl lg:text-[6.5rem] leading-[1.04] mb-7 drop-shadow-lg"
-          >
-            Guiding youth towards<br />
-            <em className="italic font-normal" style={{ color: '#7ECCC6' }}>simplicity &amp; inner peace.</em>
-          </motion.h1>
-          <motion.p
-            variants={fadeUp}
-            className="text-base md:text-xl text-white/85 leading-relaxed max-w-2xl mx-auto mb-12 drop-shadow"
-          >
-            Sahaj Spirit brings Jain philosophy to life — in a modern, engaging way<br className="hidden md:block" />
-            that resonates with youth aged 15–45 across Delhi NCR and beyond.
-          </motion.p>
-          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row gap-4 justify-center">
-            <Link to="/about" className="btn-outline-light">Discover Sahaj</Link>
-            <a
-              href={WA_LINK}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center justify-center gap-2 px-8 py-4 bg-teal text-white text-xs tracking-[0.2em] uppercase hover:bg-teal-dark transition-colors duration-300 shadow-lg"
-            >
-              <WhatsAppIcon />
-              Join the Circle
-            </a>
-          </motion.div>
-        </motion.div>
+        {/* ── LEFT: Logo + floating circles ─────────────────── */}
+        <div className="relative w-full lg:w-[48%] min-h-[52vh] lg:min-h-screen flex items-center justify-center overflow-hidden">
 
+          {/* Floating photo circles — desktop only */}
+          {floatCircles.map(({ src, size, top, left, delay, floatY, floatDur }, i) => (
+            <motion.div
+              key={i}
+              className="absolute hidden lg:block"
+              style={{ width: size, height: size, top, left }}
+              animate={{ y: [0, floatY, 0] }}
+              transition={{
+                duration: floatDur,
+                repeat: Infinity,
+                ease: 'easeInOut',
+                delay: delay + 1.2,
+              }}
+            >
+              <motion.div
+                className="w-full h-full rounded-full overflow-hidden border-[5px] border-white shadow-2xl"
+                style={{ boxShadow: '0 12px 40px rgba(0,125,120,0.12)' }}
+                initial={{ opacity: 0, scale: 0.35 }}
+                animate={{ opacity: 1, scale: 1 }}
+                transition={{
+                  delay: delay * 0.7,
+                  duration: 0.85,
+                  ease: [0.25, 0.1, 0.25, 1],
+                }}
+              >
+                <img src={src} alt="" className="w-full h-full object-cover" />
+              </motion.div>
+            </motion.div>
+          ))}
+
+          {/* Logo — centred, slightly above mid */}
+          <motion.div
+            className="relative z-10"
+            initial={{ opacity: 0, scale: 0.65 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ delay: 0.2, duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+          >
+            <img
+              src="/logo.png"
+              alt="Sahaj Spirit"
+              className="w-44 h-44 md:w-52 md:h-52 lg:w-60 lg:h-60 object-contain drop-shadow-xl"
+            />
+          </motion.div>
+        </div>
+
+        {/* ── RIGHT: Text content ───────────────────────────── */}
+        <div className="relative w-full lg:w-[52%] flex items-center px-8 md:px-14 lg:px-16 pt-4 pb-24 lg:py-0">
+          <motion.div
+            className="max-w-xl"
+            initial="hidden"
+            animate="visible"
+            variants={stagger}
+          >
+            {/* Badge */}
+            <motion.p
+              variants={fadeUp}
+              className="text-[10px] tracking-[0.45em] uppercase text-teal font-semibold mb-7"
+            >
+              A Jain Youth Movement &nbsp;·&nbsp; Since 2024
+            </motion.p>
+
+            {/* Headline */}
+            <motion.h1
+              variants={fadeUp}
+              className="font-display text-5xl md:text-6xl lg:text-[4.25rem] text-charcoal leading-[1.06] mb-7"
+            >
+              You are not broken.<br />
+              You are just forgetting<br />
+              <em
+                className="italic"
+                style={{ color: '#007D78', fontWeight: 700 }}
+              >
+                who you are.
+              </em>
+            </motion.h1>
+
+            {/* Body */}
+            <motion.p
+              variants={fadeUp}
+              className="text-warm-gray text-base md:text-[1.06rem] leading-relaxed max-w-md mb-11"
+            >
+              Somewhere beneath the anxiety, the noise, the pressure — there is a
+              version of you that has always been calm. Always been whole. Always been
+              enough. That is your Sahaj self. And it was never lost.
+            </motion.p>
+
+            {/* CTAs */}
+            <motion.div
+              variants={fadeUp}
+              className="flex flex-wrap gap-4 items-center"
+            >
+              <Link
+                to="/sahaj-tour"
+                className="flex items-center gap-2 px-8 py-4 bg-orange text-white text-sm font-medium rounded-full transition-all duration-300 hover:brightness-110 hover:-translate-y-0.5"
+                style={{ boxShadow: '0 8px 28px rgba(212,113,42,0.35)' }}
+              >
+                Experience Sahaj Tour '26 &nbsp;→
+              </Link>
+              <Link
+                to="/about"
+                className="text-sm text-charcoal/60 hover:text-teal font-medium transition-colors duration-200"
+              >
+                Learn the philosophy &nbsp;↓
+              </Link>
+            </motion.div>
+          </motion.div>
+        </div>
+
+        {/* Scroll indicator */}
         <motion.div
-          className="absolute bottom-10 left-1/2 -translate-x-1/2 text-white/50"
+          className="absolute bottom-8 left-1/4 lg:left-[24%] -translate-x-1/2 text-warm-gray/30"
           animate={{ y: [0, 8, 0] }}
-          transition={{ repeat: Infinity, duration: 2.3, ease: 'easeInOut' }}
+          transition={{ repeat: Infinity, duration: 2.4, ease: 'easeInOut' }}
         >
-          <ArrowDown size={22} />
+          <ArrowDown size={20} />
         </motion.div>
       </section>
 
