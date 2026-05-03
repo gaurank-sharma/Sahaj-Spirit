@@ -83,56 +83,29 @@ export default function Home() {
         {/* No overflow-hidden — circles must bleed off edges */}
         <div className="relative w-full lg:w-1/2 min-h-[55vh] lg:min-h-screen">
 
-          {/* Floating photo circles — desktop only */}
-          {floatCircles.map(({ src, size, top, left, delay, floatY, floatDur }, i) => (
-            <motion.div
+          {/* Photo circles — no animation */}
+          {floatCircles.map(({ src, size, top, left }, i) => (
+            <div
               key={i}
-              className="absolute z-20 hidden lg:block"
+              className="absolute z-20"
               style={{ width: size, height: size, top, left }}
-              animate={{ y: [0, floatY, 0] }}
-              transition={{
-                duration: floatDur,
-                repeat: Infinity,
-                ease: 'easeInOut',
-                delay: delay + 1.6,
-              }}
             >
-              <motion.div
+              <div
                 className="w-full h-full rounded-full overflow-hidden border-[4px] border-white"
                 style={{ boxShadow: '0 10px 36px rgba(0,100,95,0.18)' }}
-                initial={{ opacity: 0, scale: 0.3 }}
-                animate={{ opacity: 1, scale: 1 }}
-                transition={{
-                  delay: delay * 0.65,
-                  duration: 0.9,
-                  ease: [0.25, 0.1, 0.25, 1],
-                }}
               >
                 <img src={src} alt="" className="w-full h-full object-cover" />
-              </motion.div>
-            </motion.div>
+              </div>
+            </div>
           ))}
 
-          {/* Logo — desktop: absolutely placed in left column */}
-          <motion.div
-            className="hidden lg:block absolute z-10"
+          {/* Logo — same position on all screen sizes */}
+          <div
+            className="absolute z-10"
             style={{ width: 268, height: 268, top: '28%', left: '16%' }}
-            initial={{ opacity: 0, scale: 0.6 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.15, duration: 1.05, ease: [0.25, 0.1, 0.25, 1] }}
           >
             <img src="/logo.png" alt="Sahaj Spirit" className="w-full h-full object-contain" />
-          </motion.div>
-
-          {/* Logo — mobile: centered */}
-          <motion.div
-            className="lg:hidden absolute inset-0 flex items-center justify-center"
-            initial={{ opacity: 0, scale: 0.7 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ duration: 0.9 }}
-          >
-            <img src="/logo.png" alt="Sahaj Spirit" className="w-44 h-44 object-contain" />
-          </motion.div>
+          </div>
         </div>
 
         {/* ── RIGHT: Text content ───────────────────────────── */}
