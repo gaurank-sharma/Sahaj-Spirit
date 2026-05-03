@@ -58,12 +58,14 @@ const coreFeelings = [
   },
 ];
 
+// Circle positions are % within the left column container (50vw wide on desktop)
+// Negative values let circles bleed off the edge intentionally
 const floatCircles = [
-  { src: IMG.storytelling, size: 148, top: '5%',  left: '4%',  delay: 0.10, floatY: -14, floatDur: 4.1 },
-  { src: IMG.poetry,       size: 164, top: '3%',  left: '50%', delay: 0.25, floatY:  11, floatDur: 3.7 },
-  { src: IMG.interactive,  size: 158, top: '37%', left: '62%', delay: 0.40, floatY: -10, floatDur: 5.2 },
-  { src: IMG.community,    size: 155, top: '55%', left: '53%', delay: 0.20, floatY:  13, floatDur: 4.6 },
-  { src: IMG.hero,         size: 150, top: '66%', left: '7%',  delay: 0.35, floatY:  -8, floatDur: 3.5 },
+  { src: IMG.storytelling, size: 202, top: '-5%', left: '-6%', delay: 0.10, floatY: -13, floatDur: 4.1 },
+  { src: IMG.poetry,       size: 208, top:  '1%', left: '37%', delay: 0.25, floatY:  11, floatDur: 3.8 },
+  { src: IMG.interactive,  size: 202, top: '30%', left: '51%', delay: 0.38, floatY: -11, floatDur: 5.1 },
+  { src: IMG.community,    size: 206, top: '50%', left: '42%', delay: 0.18, floatY:  14, floatDur: 4.5 },
+  { src: IMG.hero,         size: 206, top: '64%', left: '-5%', delay: 0.32, floatY:  -9, floatDur: 3.6 },
 ];
 
 export default function Home() {
@@ -71,52 +73,38 @@ export default function Home() {
     <main>
       {/* ─── HERO ─────────────────────────────────────────────── */}
       <section
-        className="relative min-h-screen flex flex-col lg:flex-row overflow-hidden"
-        style={{ background: '#F2F9F8' }}
+        className="relative min-h-screen flex flex-col lg:flex-row"
+        style={{
+          background:
+            'linear-gradient(118deg, #ffffff 0%, #f2fbf9 25%, #d0ece8 55%, #bde3dd 80%, #afdbd5 100%)',
+        }}
       >
-        {/* Teal watercolour blob — top-right */}
-        <div className="absolute inset-0 pointer-events-none">
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'radial-gradient(ellipse 70% 65% at 88% 12%, rgba(0,125,120,0.14) 0%, rgba(26,173,167,0.07) 45%, transparent 68%)',
-            }}
-          />
-          <div
-            className="absolute inset-0"
-            style={{
-              background:
-                'radial-gradient(ellipse 40% 35% at 95% 5%, rgba(204,232,226,0.55) 0%, transparent 60%)',
-            }}
-          />
-        </div>
-
         {/* ── LEFT: Logo + floating circles ─────────────────── */}
-        <div className="relative w-full lg:w-[48%] min-h-[52vh] lg:min-h-screen flex items-center justify-center overflow-hidden">
+        {/* No overflow-hidden — circles must bleed off edges */}
+        <div className="relative w-full lg:w-1/2 min-h-[55vh] lg:min-h-screen">
 
           {/* Floating photo circles — desktop only */}
           {floatCircles.map(({ src, size, top, left, delay, floatY, floatDur }, i) => (
             <motion.div
               key={i}
-              className="absolute hidden lg:block"
+              className="absolute z-20 hidden lg:block"
               style={{ width: size, height: size, top, left }}
               animate={{ y: [0, floatY, 0] }}
               transition={{
                 duration: floatDur,
                 repeat: Infinity,
                 ease: 'easeInOut',
-                delay: delay + 1.2,
+                delay: delay + 1.6,
               }}
             >
               <motion.div
-                className="w-full h-full rounded-full overflow-hidden border-[5px] border-white shadow-2xl"
-                style={{ boxShadow: '0 12px 40px rgba(0,125,120,0.12)' }}
-                initial={{ opacity: 0, scale: 0.35 }}
+                className="w-full h-full rounded-full overflow-hidden border-[4px] border-white"
+                style={{ boxShadow: '0 10px 36px rgba(0,100,95,0.18)' }}
+                initial={{ opacity: 0, scale: 0.3 }}
                 animate={{ opacity: 1, scale: 1 }}
                 transition={{
-                  delay: delay * 0.7,
-                  duration: 0.85,
+                  delay: delay * 0.65,
+                  duration: 0.9,
                   ease: [0.25, 0.1, 0.25, 1],
                 }}
               >
@@ -125,23 +113,30 @@ export default function Home() {
             </motion.div>
           ))}
 
-          {/* Logo — centred, slightly above mid */}
+          {/* Logo — desktop: absolutely placed in left column */}
           <motion.div
-            className="relative z-10"
-            initial={{ opacity: 0, scale: 0.65 }}
+            className="hidden lg:block absolute z-10"
+            style={{ width: 268, height: 268, top: '28%', left: '16%' }}
+            initial={{ opacity: 0, scale: 0.6 }}
             animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2, duration: 1, ease: [0.25, 0.1, 0.25, 1] }}
+            transition={{ delay: 0.15, duration: 1.05, ease: [0.25, 0.1, 0.25, 1] }}
           >
-            <img
-              src="/logo.png"
-              alt="Sahaj Spirit"
-              className="w-44 h-44 md:w-52 md:h-52 lg:w-60 lg:h-60 object-contain drop-shadow-xl"
-            />
+            <img src="/logo.png" alt="Sahaj Spirit" className="w-full h-full object-contain" />
+          </motion.div>
+
+          {/* Logo — mobile: centered */}
+          <motion.div
+            className="lg:hidden absolute inset-0 flex items-center justify-center"
+            initial={{ opacity: 0, scale: 0.7 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{ duration: 0.9 }}
+          >
+            <img src="/logo.png" alt="Sahaj Spirit" className="w-44 h-44 object-contain" />
           </motion.div>
         </div>
 
         {/* ── RIGHT: Text content ───────────────────────────── */}
-        <div className="relative w-full lg:w-[52%] flex items-center px-8 md:px-14 lg:px-16 pt-4 pb-24 lg:py-0">
+        <div className="relative w-full lg:w-1/2 flex items-center px-8 md:px-12 lg:px-16 pt-8 pb-24 lg:py-0 lg:pt-20">
           <motion.div
             className="max-w-xl"
             initial="hidden"
@@ -151,7 +146,7 @@ export default function Home() {
             {/* Badge */}
             <motion.p
               variants={fadeUp}
-              className="text-[10px] tracking-[0.45em] uppercase text-teal font-semibold mb-7"
+              className="text-[10px] tracking-[0.48em] uppercase text-teal font-semibold mb-7"
             >
               A Jain Youth Movement &nbsp;·&nbsp; Since 2024
             </motion.p>
@@ -159,14 +154,12 @@ export default function Home() {
             {/* Headline */}
             <motion.h1
               variants={fadeUp}
-              className="font-display text-5xl md:text-6xl lg:text-[4.25rem] text-charcoal leading-[1.06] mb-7"
+              className="font-display text-[3.2rem] md:text-[4rem] lg:text-[4.8rem] xl:text-[5.4rem] text-charcoal leading-[1.03] mb-8"
             >
               You are not broken.<br />
-              You are just forgetting<br />
-              <em
-                className="italic"
-                style={{ color: '#007D78', fontWeight: 700 }}
-              >
+              You are just<br />
+              forgetting<br />
+              <em style={{ color: '#007D78', fontStyle: 'italic', fontWeight: 700 }}>
                 who you are.
               </em>
             </motion.h1>
@@ -174,7 +167,7 @@ export default function Home() {
             {/* Body */}
             <motion.p
               variants={fadeUp}
-              className="text-warm-gray text-base md:text-[1.06rem] leading-relaxed max-w-md mb-11"
+              className="text-charcoal/55 text-base md:text-[1.04rem] leading-relaxed max-w-[22rem] mb-11"
             >
               Somewhere beneath the anxiety, the noise, the pressure — there is a
               version of you that has always been calm. Always been whole. Always been
@@ -182,14 +175,11 @@ export default function Home() {
             </motion.p>
 
             {/* CTAs */}
-            <motion.div
-              variants={fadeUp}
-              className="flex flex-wrap gap-4 items-center"
-            >
+            <motion.div variants={fadeUp} className="flex flex-wrap gap-5 items-center">
               <Link
                 to="/sahaj-tour"
-                className="flex items-center gap-2 px-8 py-4 bg-orange text-white text-sm font-medium rounded-full transition-all duration-300 hover:brightness-110 hover:-translate-y-0.5"
-                style={{ boxShadow: '0 8px 28px rgba(212,113,42,0.35)' }}
+                className="px-8 py-4 bg-orange text-white text-sm font-medium rounded-full transition-all duration-300 hover:brightness-110 hover:-translate-y-0.5"
+                style={{ boxShadow: '0 8px 28px rgba(212,113,42,0.38)' }}
               >
                 Experience Sahaj Tour '26 &nbsp;→
               </Link>
@@ -203,9 +193,9 @@ export default function Home() {
           </motion.div>
         </div>
 
-        {/* Scroll indicator */}
+        {/* Scroll indicator — sits below logo on left side */}
         <motion.div
-          className="absolute bottom-8 left-1/4 lg:left-[24%] -translate-x-1/2 text-warm-gray/30"
+          className="absolute bottom-8 left-[25%] -translate-x-1/2 text-charcoal/25 hidden lg:block"
           animate={{ y: [0, 8, 0] }}
           transition={{ repeat: Infinity, duration: 2.4, ease: 'easeInOut' }}
         >
