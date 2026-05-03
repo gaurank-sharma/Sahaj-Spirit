@@ -132,7 +132,8 @@ export default function Home() {
               variants={fadeUp}
               className="text-[10px] tracking-[0.48em] uppercase text-teal font-semibold mb-7 text-center lg:text-left"
             >
-              A Jain Youth Movement &nbsp;·&nbsp; Since 2024
+              <span className="block lg:inline">A Jain Youth Movement</span>
+              <span className="block lg:inline lg:before:content-['_·_']">Since 2024</span>
             </motion.p>
 
             {/* Headline */}
