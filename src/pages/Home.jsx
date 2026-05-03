@@ -60,11 +60,11 @@ const coreFeelings = [
 
 // Desktop: size/top/left   |   Mobile: mSize/mTop/mLeft
 const floatCircles = [
-  { src: IMG.storytelling, size: 148, top: '7%',  left: '25%', mSize: 85, mTop: '8%',  mLeft: '5%'  },
-  { src: IMG.poetry,       size: 148, top: '15%', left: '49%', mSize: 85, mTop: '5%',  mLeft: '52%' },
-  { src: IMG.interactive,  size: 148, top: '34%', left: '60%', mSize: 85, mTop: '32%', mLeft: '56%' },
-  { src: IMG.community,    size: 148, top: '55%', left: '49%', mSize: 85, mTop: '54%', mLeft: '48%' },
-  { src: IMG.hero,         size: 148, top: '64%', left: '25%', mSize: 85, mTop: '63%', mLeft: '5%'  },
+  { src: IMG.storytelling, size: 148, top: '7%',  left: '25%', mSize: 85, mTop: '15%',  mLeft: '27%'  },
+  { src: IMG.poetry,       size: 148, top: '15%', left: '49%', mSize: 85, mTop: '19%',  mLeft: '55%' },
+  { src: IMG.interactive,  size: 148, top: '34%', left: '60%', mSize: 85, mTop: '37%', mLeft: '67%' },
+  { src: IMG.community,    size: 148, top: '55%', left: '49%', mSize: 85, mTop: '52%', mLeft: '53%' },
+  { src: IMG.hero,         size: 148, top: '64%', left: '25%', mSize: 85, mTop: '56%', mLeft: '25%'  },
 ];
 
 export default function Home() {
