@@ -105,9 +105,9 @@ export default function Home() {
             </div>
           ))}
 
-          {/* Logo — mobile (tune mLogoSize / mLogoTop / mLogoLeft below) */}
+          {/* Logo — mobile */}
           <div className="lg:hidden absolute z-10"
-            style={{ width: 150, height: 150, top: '30%', left: '18%' }}>
+            style={{ width: 150, height: 150, top: '30%', left: '50%', transform: 'translateX(-50%)' }}>
             <img src="/logo.png" alt="Sahaj Spirit" className="w-full h-full object-contain" />
           </div>
 
