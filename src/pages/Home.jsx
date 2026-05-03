@@ -83,26 +83,26 @@ export default function Home() {
         {/* No overflow-hidden — circles must bleed off edges */}
         <div className="relative w-full lg:w-1/2 min-h-[55vh] lg:min-h-screen">
 
-          {/* Photo circles — no animation */}
-          {floatCircles.map(({ src, size, top, left }, i) => (
+          {/* Photo circles */}
+          {floatCircles.map(({ src, top, left }, i) => (
             <div
               key={i}
-              className="absolute z-20"
-              style={{ width: size, height: size, top, left }}
+              className="absolute z-20 w-[80px] h-[80px] lg:w-[148px] lg:h-[148px]"
+              style={{ top, left }}
             >
               <div
-                className="w-full h-full rounded-full overflow-hidden border-[4px] border-white"
-                style={{ boxShadow: '0 10px 36px rgba(0,100,95,0.18)' }}
+                className="w-full h-full rounded-full overflow-hidden border-[3px] lg:border-[4px] border-white"
+                style={{ boxShadow: '0 6px 20px rgba(0,100,95,0.18)' }}
               >
                 <img src={src} alt="" className="w-full h-full object-cover" />
               </div>
             </div>
           ))}
 
-          {/* Logo — same position on all screen sizes */}
+          {/* Logo */}
           <div
-            className="absolute z-10"
-            style={{ width: 268, height: 268, top: '28%', left: '16%' }}
+            className="absolute z-10 w-[150px] h-[150px] lg:w-[268px] lg:h-[268px]"
+            style={{ top: '28%', left: '16%' }}
           >
             <img src="/logo.png" alt="Sahaj Spirit" className="w-full h-full object-contain" />
           </div>
