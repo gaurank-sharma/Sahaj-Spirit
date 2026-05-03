@@ -61,11 +61,11 @@ const coreFeelings = [
 // Circle positions are % within the left column container (50vw wide on desktop)
 // Negative values let circles bleed off the edge intentionally
 const floatCircles = [
-  { src: IMG.storytelling, size: 202, top: '-5%', left: '-6%', delay: 0.10, floatY: -13, floatDur: 4.1 },
-  { src: IMG.poetry,       size: 208, top:  '1%', left: '37%', delay: 0.25, floatY:  11, floatDur: 3.8 },
-  { src: IMG.interactive,  size: 202, top: '30%', left: '51%', delay: 0.38, floatY: -11, floatDur: 5.1 },
-  { src: IMG.community,    size: 206, top: '50%', left: '42%', delay: 0.18, floatY:  14, floatDur: 4.5 },
-  { src: IMG.hero,         size: 206, top: '64%', left: '-5%', delay: 0.32, floatY:  -9, floatDur: 3.6 },
+  { src: IMG.storytelling, size: 148, top: '7%', left: '25%'},
+  { src: IMG.poetry,       size: 148, top:  '15%', left: '49%'},
+  { src: IMG.interactive,  size: 148, top: '34%', left: '60%'},
+  { src: IMG.community,    size: 148, top: '55%', left: '49%'},
+  { src: IMG.hero,         size: 148, top: '67%', left: '25%'},
 ];
 
 export default function Home() {
@@ -169,9 +169,7 @@ export default function Home() {
               variants={fadeUp}
               className="text-charcoal/55 text-base md:text-[1.04rem] leading-relaxed max-w-[22rem] mb-11"
             >
-              Somewhere beneath the anxiety, the noise, the pressure — there is a
-              version of you that has always been calm. Always been whole. Always been
-              enough. That is your Sahaj self. And it was never lost.
+            
             </motion.p>
 
             {/* CTAs */}
