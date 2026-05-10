@@ -396,8 +396,9 @@ export default function SahajTour() {
             initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
             viewport={vp} transition={{ duration: 0.8 }}
             className="relative">
-            {/* Connecting line */}
-            <div className="absolute top-4 left-0 right-0 h-px bg-charcoal/12 hidden sm:block" />
+            {/* Connecting line — bisects the 32px circles (top = 16px) */}
+            <div className="hidden sm:block absolute left-0 right-0 h-px bg-charcoal/20"
+              style={{ top: 16 }} />
             <div className="flex flex-col sm:flex-row sm:justify-between gap-10 sm:gap-0">
               {milestones.map(({ date, label, done, active }) => (
                 <div key={date} className="flex flex-col items-start sm:items-center sm:text-center">
