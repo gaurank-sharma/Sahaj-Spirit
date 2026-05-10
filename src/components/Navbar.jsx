@@ -24,7 +24,7 @@ export default function Navbar() {
     { to: '/', label: 'Home' },
     { to: '/about', label: 'About' },
     { to: '/sahaj-tour', label: 'Events' },
-    { to: '/contact', label: 'Contact', href: 'mailto:hello@sahajspirit.in' },
+    { to: '/contact', label: 'Contact' },
   ];
 
   return (
