@@ -58,18 +58,48 @@ export default function Home() {
         {/* LEFT: Logo + circles */}
         <div className="relative w-full lg:w-1/2 min-h-[62vh] lg:min-h-screen">
 
-          {/* MOBILE — only 2 circles (first + last) */}
-          {floatCircles.filter((_, i) => i === 0 || i === 4).map(({ src, mSize, mTop, mLeft }, idx) => (
-            <div key={`m-${idx}`} className="lg:hidden absolute z-20"
-              style={{ width: mSize, height: mSize, top: mTop, left: mLeft }}>
-              <div className="w-full h-full rounded-full overflow-hidden border-[3px] border-white"
-                style={{ boxShadow: '0 6px 20px rgba(0,100,95,0.18)' }}>
-                <img src={src} alt="" className="w-full h-full object-cover object-center" />
+          {/* MOBILE — orbital ring animation */}
+          <div className="lg:hidden absolute inset-0 flex items-center justify-center">
+            <div className="relative w-72 h-72">
+              {/* Subtle orbit ring guide */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="w-[214px] h-[214px] rounded-full border border-teal/20" />
+              </div>
+              {/* Rotating container */}
+              <motion.div
+                className="absolute inset-0"
+                animate={{ rotate: 360 }}
+                transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
+              >
+                {floatCircles.map(({ src }, i) => {
+                  const S = 72, R = 107, H = 144;
+                  const a = (i / 5) * 2 * Math.PI;
+                  return (
+                    <div key={i} className="absolute"
+                      style={{
+                        width: S, height: S,
+                        top:  H - S / 2 + (-R * Math.cos(a)),
+                        left: H - S / 2 + ( R * Math.sin(a)),
+                      }}>
+                      <motion.div
+                        className="w-full h-full rounded-full overflow-hidden border-[3px] border-white"
+                        style={{ boxShadow: '0 6px 20px rgba(0,100,95,0.18)' }}
+                        animate={{ rotate: -360 }}
+                        transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}>
+                        <img src={src} alt="" className="w-full h-full object-cover" />
+                      </motion.div>
+                    </div>
+                  );
+                })}
+              </motion.div>
+              {/* Logo center */}
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 z-10">
+                <img src="/logo.png" alt="Sahaj Spirit" className="w-full h-full object-contain" />
               </div>
             </div>
-          ))}
+          </div>
 
-          {/* DESKTOP — all 5 circles */}
+          {/* DESKTOP — all 5 circles static */}
           {floatCircles.map(({ src, size, top, left }, i) => (
             <div key={`d-${i}`} className="hidden lg:block absolute z-20"
               style={{ width: size, height: size, top, left }}>
@@ -79,12 +109,6 @@ export default function Home() {
               </div>
             </div>
           ))}
-
-          {/* Logo — mobile: centered, large */}
-          <div className="lg:hidden absolute z-10"
-            style={{ width: 220, height: 220, top: '28%', left: '50%', transform: 'translateX(-50%)' }}>
-            <img src="/logo.png" alt="Sahaj Spirit" className="w-full h-full object-contain" />
-          </div>
 
           {/* Logo — desktop */}
           <div className="hidden lg:block absolute z-10"

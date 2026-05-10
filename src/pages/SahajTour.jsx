@@ -1,238 +1,288 @@
-import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { MapPin, Calendar, Users, Sun, Leaf, Music, Heart } from 'lucide-react';
+import { MapPin, Clock, Check, Coffee, Home as HomeIcon, Bus, Users, Package, Globe } from 'lucide-react';
 
-const IMG = {
-  // All unique — none repeated from Home or About pages
-  hero:    'https://images.unsplash.com/photo-1501854140801-50d01698950b?auto=format&fit=crop&w=1920&q=80',
-  journey: 'https://images.unsplash.com/photo-1433086966358-54859d0ed716?auto=format&fit=crop&w=1200&q=80',
-  day1:    'https://images.unsplash.com/photo-1523240795612-9a054b0db644?auto=format&fit=crop&w=1200&q=80',
-  day2:    '/tour2.png',
-  day3:    '/tour3.jpg',
-  day4:    'https://images.unsplash.com/photo-1476234251651-f353703a034d?auto=format&fit=crop&w=1200&q=80',
+const TOUR_IMG = {
+  hero:      'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1920&q=80',
+  about:     '/about2.png',
+  awaken:    '/about1.png',
+  wander:    '/tour2.png',
+  comeAlive: '/tour3.jpg',
 };
 
 const fadeUp = {
-  hidden: { opacity: 0, y: 32 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.75, ease: [0.25, 0.1, 0.25, 1] } },
+  hidden: { opacity: 0, y: 48 },
+  visible: { opacity: 1, y: 0, transition: { duration: 0.85, ease: [0.25, 0.1, 0.25, 1] } },
 };
-const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.13 } } };
+const stagger = { hidden: {}, visible: { transition: { staggerChildren: 0.12 } } };
+const vp = { once: true, margin: '-60px' };
 
-const highlights = [
-  { Icon: Users,  title: 'Interactive Journey',      desc: 'A thoughtfully designed day that keeps participants engaged, inspired, and connected throughout.' },
-  { Icon: Leaf,   title: 'Meditation Sessions',      desc: 'Guided practices to help youth connect with their inner calm, clarity, and sense of purpose.' },
-  { Icon: MapPin, title: 'Temple Visit',             desc: 'A sacred and peaceful visit to Chidayatan Jain Temple — experiencing its spiritual energy firsthand.' },
-  { Icon: Music,  title: 'Cultural Performances',    desc: 'Uplifting performances celebrating Jain culture, values, and artistic expression.' },
-  { Icon: Heart,  title: 'Satvik Jain Food',         desc: 'Pure, wholesome, lovingly prepared meals — breakfast, lunch, and evening meal — throughout the day.' },
-  { Icon: Sun,    title: 'Bus Facility',             desc: 'Comfortable, organised bus transportation from Delhi NCR — safe, timely, and well-managed.' },
+const awakenSchedule = [
+  { time: '9:00',  act: 'Breakfast' },
+  { time: '9:30',  act: 'Opening Ceremony & Introduction' },
+  { time: '10:00', act: 'Sahajometre Activity' },
+  { time: '10:45', act: 'Group Engagement Activity' },
+  { time: '11:00', act: 'Musical Poetry' },
+  { time: '11:15', act: 'Main Session' },
+  { time: '11:40', act: 'Guided Meditation' },
+  { time: '12:00', act: 'Lunch Break' },
 ];
 
-const itinerary = [
-  {
-    day: 'Morning',
-    title: 'Arrival & Welcome',
-    desc: 'Arrive at Hastinapur Jain Teerth, receive your registration band, and settle in. Warm hospitality from our Sahyogi team ensures every participant feels comfortable from the very first moment.',
-    image: IMG.day1,
-  },
-  {
-    day: 'Sessions',
-    title: 'Spiritual Talks & Meditation',
-    desc: 'Guided meditation and insightful spiritual talks — presenting Jain philosophy in a modern, relatable way. A time for reflection, learning, and inner stillness.',
-    image: IMG.day2,
-  },
-  {
-    day: 'Afternoon',
-    title: 'Satvik Lunch Together',
-    desc: 'A wholesome Satvik Jain meal shared in community. Pure, lovingly prepared food that nourishes both body and spirit — eaten together, in the spirit of Sahajta.',
-    image: IMG.day3,
-  },
-  {
-    day: 'Temple Visit',
-    title: 'Chidayatan Jain Temple',
-    desc: 'A sacred visit to the Chidayatan Jain Temple — one of the most serene spiritual spaces at Hastinapur Jain Teerth. Experience peace, devotion, and the timeless energy of this sacred place.',
-    image: IMG.day4,
-  },
+const wanderSchedule = [
+  { time: '1:30', act: 'Hastinapur Bhraman (Sightseeing)' },
 ];
 
-const INITIAL = { name: '', email: '', phone: '', city: '', why: '' };
+const comeAliveSchedule = [
+  { time: '3:30', act: 'Nukkad Natak with Nashik Dhol by Manglarthies' },
+  { time: '3:45', act: 'Sahaj Keertan' },
+  { time: '5:15', act: 'Evening Meal' },
+  { time: '6:45', act: 'Departure' },
+];
+
+const practicalInfo = [
+  { Icon: Coffee,    title: 'Food',              desc: 'Satvik. Jain-aligned. Healthy and delicious. Three meals included — breakfast, lunch, evening.' },
+  { Icon: HomeIcon,  title: 'Accommodation',     desc: 'This is a one-day event — no overnight stay needed. For attendees from far, we can help arrange paid accommodation on request.' },
+  { Icon: Bus,       title: 'Transport',         desc: 'Buses arranged from Delhi NCR for a smooth same-day journey to Hastinapur and back.' },
+  { Icon: Users,     title: 'Crowd Management',  desc: 'The venue is zoned into Activity, Meditation, and Dining areas. One volunteer for every 50 participants. Wristband entry.' },
+  { Icon: Package,   title: 'What to Bring',     desc: 'An open mind. Comfortable clothing. Yourself — exactly as you are.' },
+  { Icon: Globe,     title: 'Languages',         desc: 'All sessions in Hindi & English. Inclusive of all backgrounds.' },
+];
+
+const milestones = [
+  { date: '11 May',     label: 'Sahaj Tour announced',   done: true  },
+  { date: '11 June',    label: 'Date and venue revealed', done: true  },
+  { date: '11 July',    label: 'Registrations open',      done: false, active: true },
+  { date: '11 October', label: 'The day itself',           done: false },
+];
+
+function ScheduleRow({ time, act, light }) {
+  return (
+    <div className={`flex gap-6 items-start py-4 border-b ${light ? 'border-white/10' : 'border-charcoal/8'}`}>
+      <span className={`font-display text-xl w-16 flex-shrink-0 ${light ? 'text-orange' : 'text-teal'}`}>{time}</span>
+      <span className={`text-base ${light ? 'text-white/80' : 'text-charcoal/75'}`}>{act}</span>
+    </div>
+  );
+}
 
 export default function SahajTour() {
-  const [form, setForm] = useState(INITIAL);
-  const [submitted, setSubmitted] = useState(false);
-  const [loading, setLoading] = useState(false);
-
-  const handleChange = (e) => setForm((f) => ({ ...f, [e.target.name]: e.target.value }));
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setLoading(true);
-    // TODO: Connect to EmailJS — add your serviceId, templateId, publicKey
-    await new Promise((res) => setTimeout(res, 1000));
-    setSubmitted(true);
-    setLoading(false);
-  };
-
   return (
     <main>
+
       {/* ─── HERO ─────────────────────────────────────────────── */}
-      <section className="relative min-h-[75vh] flex items-end overflow-hidden pt-28">
-        <div className="absolute inset-0">
-          <img src={IMG.hero} alt="Sahaj Tour" className="w-full h-full object-cover" />
-          <div className="absolute inset-0 bg-black/50" />
-          <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
-        </div>
-        <div className="relative z-10 max-w-7xl mx-auto px-6 md:px-10 pb-16 md:pb-24 w-full">
-          <motion.div initial="hidden" animate="visible" variants={stagger}>
-            <motion.p variants={fadeUp} className="text-[10px] tracking-[0.4em] uppercase text-white/45 mb-5">
-              The Journey
+      <section className="relative min-h-screen flex items-center justify-center text-white text-center overflow-hidden">
+        <img src={TOUR_IMG.hero} alt="Sahaj Tour"
+          className="absolute inset-0 w-full h-full object-cover" />
+        <div className="absolute inset-0"
+          style={{ background: 'linear-gradient(to bottom,rgba(0,0,0,0.35) 0%,rgba(0,0,0,0.55) 60%,rgba(0,0,0,0.7) 100%)' }} />
+        <motion.div
+          className="relative z-10 px-6 max-w-4xl mx-auto"
+          initial="hidden" animate="visible" variants={stagger}
+        >
+          <motion.p variants={fadeUp}
+            className="text-[10px] tracking-[0.5em] uppercase mb-6 font-semibold"
+            style={{ color: '#D4712A' }}>
+            Flagship Event &nbsp;·&nbsp; 11.10.2026
+          </motion.p>
+          <motion.h1 variants={fadeUp}
+            className="font-display font-light text-6xl md:text-8xl lg:text-9xl leading-[1.0] mb-6">
+            Sahaj Tour &apos;26
+          </motion.h1>
+          <motion.p variants={fadeUp}
+            className="font-display italic text-xl md:text-2xl text-white/75 mb-10">
+            One day. One journey. One encounter with yourself.
+          </motion.p>
+          <motion.div variants={fadeUp}
+            className="flex flex-wrap justify-center gap-8 text-white/55 text-xs tracking-widest uppercase mb-12">
+            <span className="flex items-center gap-2"><MapPin size={13} strokeWidth={1.5} />Hastinapur, UP</span>
+            <span className="flex items-center gap-2"><Clock size={13} strokeWidth={1.5} />Full day</span>
+            <span className="flex items-center gap-2 text-white/55">₹500 / person</span>
+          </motion.div>
+          <motion.div variants={fadeUp}>
+            <a href="#register"
+              className="inline-flex items-center gap-2 px-10 py-4 bg-orange text-white text-sm font-medium rounded-full hover:brightness-110 transition-all duration-300"
+              style={{ boxShadow: '0 8px 28px rgba(212,113,42,0.45)' }}>
+              Register Now &nbsp;→
+            </a>
+          </motion.div>
+        </motion.div>
+      </section>
+
+      {/* ─── ABOUT THE EVENT ──────────────────────────────────── */}
+      <section className="py-24 md:py-36 px-6 md:px-12 lg:px-20" style={{ background: '#ffffff' }}>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16 lg:gap-24 items-center">
+          <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={stagger}>
+            <motion.p variants={fadeUp}
+              className="text-[10px] tracking-[0.45em] uppercase text-teal font-semibold mb-8">
+              About the Event
             </motion.p>
-            <motion.h1
-              variants={fadeUp}
-              className="font-display font-light text-6xl md:text-8xl text-white leading-[1.05] max-w-3xl"
-            >
-              The Sahaj Tour.<br />
-              <em className="italic" style={{ color: '#7ECCC6' }}>A journey inward.</em>
-            </motion.h1>
-            <motion.div
-              variants={fadeUp}
-              className="flex flex-wrap gap-6 mt-10 text-white/55 text-xs tracking-widest uppercase"
-            >
-              <span className="flex items-center gap-2"><Calendar size={13} strokeWidth={1.5} /> 1 Day Experience</span>
-              <span className="flex items-center gap-2"><MapPin size={13} strokeWidth={1.5} /> Hastinapur Jain Teerth</span>
-              <span className="flex items-center gap-2"><Users size={13} strokeWidth={1.5} /> Ages 15–45</span>
+            <motion.h2 variants={fadeUp}
+              className="font-display text-4xl md:text-5xl lg:text-6xl text-charcoal leading-[1.05] mb-8">
+              Not a pilgrimage. Not a seminar.{' '}
+              <em className="italic" style={{ color: '#007D78' }}>An experience.</em>
+            </motion.h2>
+            <motion.div variants={fadeUp} className="space-y-5 text-charcoal/65 text-base leading-relaxed">
+              <p>Sahaj Tour is one full day where a hundred young people travel together to
+                Hastinapur Jain Teerth — and somewhere between the ancient temples,
+                the music, the laughter, and the silence — something shifts.</p>
+              <p>You arrive as one version of yourself. You leave as a slightly lighter one.</p>
+              <p>We&apos;ve designed this day around three movements — Awaken, Wander,
+                Come Alive. Each one peels away a layer.</p>
+            </motion.div>
+          </motion.div>
+          <motion.div
+            initial={{ opacity: 0, x: 40 }} whileInView={{ opacity: 1, x: 0 }}
+            viewport={vp} transition={{ duration: 0.9, ease: [0.25, 0.1, 0.25, 1] }}
+            className="rounded-3xl overflow-hidden aspect-[4/5] lg:h-[580px]">
+            <img src={TOUR_IMG.about} alt="About Sahaj Tour"
+              className="w-full h-full object-cover" />
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ─── CHAPTER ONE: AWAKEN ──────────────────────────────── */}
+      <section className="py-24 md:py-32 px-6 md:px-12 lg:px-20" style={{ background: '#FAF8F3' }}>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
+          {/* Left: chapter content */}
+          <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={stagger}>
+            <motion.p variants={fadeUp}
+              className="text-[10px] tracking-[0.45em] uppercase text-teal font-semibold mb-4">
+              Chapter One
+            </motion.p>
+            <motion.h2 variants={fadeUp}
+              className="font-display text-6xl md:text-7xl text-charcoal font-light mb-3">
+              Awaken
+            </motion.h2>
+            <motion.p variants={fadeUp} className="text-warm-gray text-sm mb-8">
+              9 AM — 12 PM
+            </motion.p>
+            <motion.p variants={fadeUp} className="text-charcoal/65 text-base leading-relaxed mb-10 max-w-md">
+              It begins with breakfast and strangers who quickly stop feeling like strangers.
+              The Sahajometre will make you question how calm you actually are. Musical poetry
+              will make you feel things you forgot you could feel. The main session and guided
+              meditation will bring you somewhere quieter than you&apos;ve been in a while.
+            </motion.p>
+            <motion.div variants={fadeUp}
+              className="rounded-2xl overflow-hidden aspect-[4/3]">
+              <img src={TOUR_IMG.awaken} alt="Awaken"
+                className="w-full h-full object-cover" />
+            </motion.div>
+          </motion.div>
+          {/* Right: schedule */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={vp} transition={{ duration: 0.8, delay: 0.15 }}
+            className="pt-16 lg:pt-28">
+            {awakenSchedule.map(({ time, act }) => (
+              <ScheduleRow key={time} time={time} act={act} light={false} />
+            ))}
+          </motion.div>
+        </div>
+      </section>
+
+      {/* ─── CHAPTER TWO: WANDER ──────────────────────────────── */}
+      <section className="py-24 md:py-32 px-6 md:px-12 lg:px-20" style={{ background: '#ffffff' }}>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
+          {/* Left: continues schedule */}
+          <motion.div
+            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={vp} transition={{ duration: 0.8 }}
+            className="pt-0 lg:pt-16">
+            {wanderSchedule.map(({ time, act }) => (
+              <ScheduleRow key={time} time={time} act={act} light={false} />
+            ))}
+          </motion.div>
+          {/* Right: chapter content */}
+          <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={stagger}>
+            <motion.p variants={fadeUp}
+              className="text-[10px] tracking-[0.45em] uppercase text-teal font-semibold mb-4">
+              Chapter Two
+            </motion.p>
+            <motion.h2 variants={fadeUp}
+              className="font-display text-6xl md:text-7xl text-charcoal font-light mb-3">
+              Wander
+            </motion.h2>
+            <motion.p variants={fadeUp} className="text-warm-gray text-sm mb-8">
+              12 PM — 3:30 PM
+            </motion.p>
+            <motion.p variants={fadeUp} className="text-charcoal/65 text-base leading-relaxed mb-10 max-w-md">
+              After lunch, we walk through Hastinapur — one of the most ancient Jain teerthas
+              in the country. No rush. No agenda. Just you, the history beneath your feet,
+              and a sky that doesn&apos;t care about your deadlines.
+            </motion.p>
+            <motion.div variants={fadeUp}
+              className="rounded-2xl overflow-hidden aspect-[4/3]">
+              <img src={TOUR_IMG.wander} alt="Wander"
+                className="w-full h-full object-cover" />
             </motion.div>
           </motion.div>
         </div>
       </section>
 
-      {/* ─── ABOUT JOURNEY ────────────────────────────────────── */}
-      <section className="py-24 md:py-36 bg-cream">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-14 lg:gap-24 items-center mb-24">
-            <motion.div
-              initial="hidden"
-              whileInView="visible"
-              viewport={{ once: true }}
-              variants={stagger}
-            >
-              <motion.p variants={fadeUp} className="section-label mb-5">About the Journey</motion.p>
-              <motion.h2
-                variants={fadeUp}
-                className="font-display font-light text-5xl md:text-6xl text-charcoal leading-[1.1] mb-8"
-              >
-                A spiritual + travel<br />
-                <em className="italic">experience for youth.</em>
-              </motion.h2>
-              <motion.p variants={fadeUp} className="text-warm-gray text-base md:text-lg leading-relaxed mb-5">
-                Sahaj Tour is a one-day immersive experience at Hastinapur Jain Teerth —
-                combining spiritual sessions, guided meditation, a sacred temple visit at
-                Chidayatan, cultural performances, and Satvik meals in community.
-              </motion.p>
-              <motion.p variants={fadeUp} className="text-warm-gray text-base leading-relaxed mb-5">
-                Designed for youth aged 15–45, every element of the day is crafted to be
-                engaging, meaningful, and rooted in Jain values — presented in a modern,
-                relatable way that stays with participants long after the day ends.
-              </motion.p>
-              <motion.p variants={fadeUp} className="text-warm-gray text-base leading-relaxed">
-                50 dedicated Sahyogi volunteers ensure every participant feels welcomed,
-                comfortable, and inspired throughout the journey.
-              </motion.p>
+      {/* ─── CHAPTER THREE: COME ALIVE ────────────────────────── */}
+      <section className="py-24 md:py-32 px-6 md:px-12 lg:px-20 text-white"
+        style={{ background: '#1B20A8' }}>
+        <div className="max-w-7xl mx-auto grid grid-cols-1 lg:grid-cols-2 gap-16">
+          {/* Left: chapter content */}
+          <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={stagger}>
+            <motion.p variants={fadeUp}
+              className="text-[10px] tracking-[0.45em] uppercase font-semibold mb-4"
+              style={{ color: '#D4712A' }}>
+              Chapter Three
+            </motion.p>
+            <motion.h2 variants={fadeUp}
+              className="font-display text-6xl md:text-7xl font-light mb-3">
+              Come Alive
+            </motion.h2>
+            <motion.p variants={fadeUp} className="text-white/50 text-sm mb-8">
+              3:30 PM — 6:45 PM
+            </motion.p>
+            <motion.p variants={fadeUp} className="text-white/70 text-base leading-relaxed mb-10 max-w-md">
+              Nukkad Natak with the thunder of Nashik Dhol. Sahaj Keertan that you won&apos;t
+              be able to stay still for. Evening meal together. And then the ride back —
+              quieter than you expected, fuller than you hoped.
+            </motion.p>
+            <motion.div variants={fadeUp}
+              className="rounded-2xl overflow-hidden aspect-[4/3]">
+              <img src={TOUR_IMG.comeAlive} alt="Come Alive"
+                className="w-full h-full object-cover opacity-90" />
             </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, x: 40 }}
-              whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.8 }}
-              className="relative rounded-3xl overflow-hidden aspect-[4/5]"
-            >
-              <img src={IMG.journey} alt="Journey path" className="w-full h-full object-cover" />
-              <div className="absolute inset-0 bg-gradient-to-t from-charcoal/50 to-transparent" />
-              <div className="absolute bottom-8 left-8 right-8 text-white">
-                <p className="font-display text-2xl font-light italic leading-snug">
-                  "Sahajta — the art of living naturally<br />and effortlessly."
-                </p>
-              </div>
-            </motion.div>
-          </div>
-
-          {/* Highlights grid */}
+          </motion.div>
+          {/* Right: schedule */}
           <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-          >
-            <motion.p variants={fadeUp} className="section-label mb-5">What to Expect</motion.p>
-            <motion.h3
-              variants={fadeUp}
-              className="font-display font-light text-4xl md:text-5xl text-charcoal mb-12"
-            >
-              Experience highlights.
-            </motion.h3>
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
-              {highlights.map(({ Icon, title, desc }, i) => (
-                <motion.div
-                  key={title}
-                  initial={{ opacity: 0, y: 30 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.08, duration: 0.6 }}
-                  className="bg-sage rounded-2xl p-7 flex flex-col gap-4 hover:shadow-md transition-shadow duration-300"
-                >
-                  <div className="w-10 h-10 rounded-full bg-teal/10 flex items-center justify-center text-teal">
-                    <Icon size={18} strokeWidth={1.5} />
-                  </div>
-                  <h4 className="font-display text-xl text-charcoal font-light">{title}</h4>
-                  <p className="text-warm-gray text-sm leading-relaxed">{desc}</p>
-                </motion.div>
-              ))}
-            </div>
+            initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={vp} transition={{ duration: 0.8, delay: 0.15 }}
+            className="pt-0 lg:pt-28">
+            {comeAliveSchedule.map(({ time, act }) => (
+              <ScheduleRow key={time} time={time} act={act} light={true} />
+            ))}
           </motion.div>
         </div>
       </section>
 
-      {/* ─── ITINERARY ────────────────────────────────────────── */}
-      <section className="py-24 bg-sage">
-        <div className="max-w-7xl mx-auto px-6 md:px-10">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-            className="mb-14"
-          >
-            <motion.p variants={fadeUp} className="section-label mb-5">Program Flow</motion.p>
-            <motion.h2
-              variants={fadeUp}
-              className="font-display font-light text-5xl md:text-6xl text-charcoal"
-            >
-              The day, <em className="italic">step by step.</em>
+      {/* ─── PRACTICAL INFORMATION ────────────────────────────── */}
+      <section className="py-24 md:py-36 px-6 md:px-12 lg:px-20" style={{ background: '#FAF8F3' }}>
+        <div className="max-w-7xl mx-auto">
+          <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={stagger}
+            className="mb-16">
+            <motion.p variants={fadeUp}
+              className="text-[10px] tracking-[0.45em] uppercase text-teal font-semibold mb-6">
+              Practical Information
+            </motion.p>
+            <motion.h2 variants={fadeUp}
+              className="font-display text-5xl md:text-6xl lg:text-7xl text-charcoal leading-[1.05]">
+              Everything you need.<br />Nothing you don&apos;t.
             </motion.h2>
           </motion.div>
-
-          <div className="flex flex-col gap-6">
-            {itinerary.map(({ day, title, desc, image }, i) => (
-              <motion.div
-                key={day}
-                initial={{ opacity: 0, y: 30 }}
-                whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ delay: i * 0.08, duration: 0.65 }}
-                className={`flex flex-col ${i % 2 === 0 ? 'md:flex-row' : 'md:flex-row-reverse'} gap-0 rounded-3xl overflow-hidden bg-white shadow-sm`}
-              >
-                <div className="w-full md:w-5/12 overflow-hidden aspect-[4/3] md:aspect-auto">
-                  <img
-                    src={image}
-                    alt={title}
-                    className="w-full h-full object-cover hover:scale-105 transition-transform duration-700"
-                  />
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5">
+            {practicalInfo.map(({ Icon, title, desc }, i) => (
+              <motion.div key={title}
+                initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+                viewport={vp} transition={{ delay: i * 0.08, duration: 0.7 }}
+                className="bg-white rounded-2xl p-8 border border-cream-dark">
+                <div className="w-10 h-10 rounded-xl bg-sage flex items-center justify-center mb-6">
+                  <Icon size={18} className="text-teal" strokeWidth={1.5} />
                 </div>
-                <div className="w-full md:w-7/12 p-8 md:p-12 flex flex-col justify-center">
-                  <span className="text-[10px] tracking-[0.35em] uppercase text-teal mb-4 font-medium">{day}</span>
-                  <h3 className="font-display text-3xl md:text-4xl text-charcoal font-light mb-4">{title}</h3>
-                  <p className="text-warm-gray text-base leading-relaxed max-w-sm">{desc}</p>
-                </div>
+                <h3 className="font-display text-xl text-charcoal font-light mb-3">{title}</h3>
+                <p className="text-charcoal/55 text-sm leading-relaxed italic">{desc}</p>
               </motion.div>
             ))}
           </div>
@@ -240,112 +290,136 @@ export default function SahajTour() {
       </section>
 
       {/* ─── REGISTRATION ─────────────────────────────────────── */}
-      <section id="register" className="py-24 md:py-36 bg-cream">
-        <div className="max-w-3xl mx-auto px-6 md:px-10">
-          <motion.div
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            variants={stagger}
-            className="mb-12 text-center"
-          >
-            <motion.p variants={fadeUp} className="section-label mb-5">Registration</motion.p>
-            <motion.h2
-              variants={fadeUp}
-              className="font-display font-light text-5xl md:text-6xl text-charcoal mb-5"
-            >
-              Begin the <em className="italic text-teal">journey.</em>
-            </motion.h2>
-            <motion.p variants={fadeUp} className="text-warm-gray text-base leading-relaxed max-w-md mx-auto">
-              Register your interest for Sahaj Tour at Hastinapur Jain Teerth. Fill this
-              in and we'll share all details personally. Bus facility available from Delhi NCR.
+      <section id="register" className="py-24 md:py-36 px-6 md:px-12 lg:px-20"
+        style={{ background: '#ffffff' }}>
+        <div className="max-w-6xl mx-auto">
+          <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={stagger}
+            className="mb-14">
+            <motion.p variants={fadeUp}
+              className="text-[10px] tracking-[0.45em] uppercase text-teal font-semibold mb-6">
+              Registration
             </motion.p>
+            <motion.h2 variants={fadeUp}
+              className="font-display text-5xl md:text-6xl text-charcoal">
+              Two ways to join us.
+            </motion.h2>
           </motion.div>
 
-          {submitted ? (
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+            {/* Online */}
             <motion.div
-              initial={{ opacity: 0, scale: 0.96 }}
-              animate={{ opacity: 1, scale: 1 }}
-              className="text-center py-20 bg-sage rounded-3xl border border-sage-dark"
-            >
-              <div className="w-16 h-16 rounded-full bg-teal/15 flex items-center justify-center mx-auto mb-6">
-                <Leaf className="text-teal" size={28} strokeWidth={1.5} />
-              </div>
-              <h3 className="font-display text-4xl text-charcoal font-light mb-3">
-                You're on the path.
-              </h3>
-              <p className="text-warm-gray text-base max-w-sm mx-auto leading-relaxed">
-                We've received your registration. Our team will reach out soon with all event details, including transport options from your city.
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={vp} transition={{ duration: 0.75 }}
+              className="rounded-2xl p-10 border-2 flex flex-col"
+              style={{ borderColor: '#D4712A' }}>
+              <p className="text-[10px] tracking-[0.35em] uppercase font-semibold mb-4"
+                style={{ color: '#D4712A' }}>Primary</p>
+              <h3 className="font-display text-3xl text-charcoal font-light mb-2">Register Online</h3>
+              <p className="text-charcoal/55 italic text-sm mb-8">
+                Available across India. Fill the form, pay ₹500, get instant confirmation.
               </p>
+              <div className="space-y-3 mb-10 flex-1">
+                {['Open to participants nationwide', '₹500 per participant',
+                  'Instant digital confirmation', 'Wristband collection at venue'].map(item => (
+                  <div key={item} className="flex items-center gap-3">
+                    <Check size={15} className="text-teal flex-shrink-0" />
+                    <span className="text-charcoal/70 text-sm">{item}</span>
+                  </div>
+                ))}
+              </div>
+              <div className="flex items-center gap-4 flex-wrap">
+                <span className="text-[10px] text-warm-gray border border-cream-dark px-3 py-1.5 rounded-full">
+                  Registrations open 11th July 2026
+                </span>
+                <a href="mailto:Teamsahajspirit@gmail.com"
+                  className="px-6 py-3 bg-orange text-white text-sm font-medium rounded-full hover:brightness-110 transition-all duration-300"
+                  style={{ boxShadow: '0 6px 20px rgba(212,113,42,0.3)' }}>
+                  Open Registration Form &nbsp;→
+                </a>
+              </div>
             </motion.div>
-          ) : (
-            <motion.form
-              initial={{ opacity: 0, y: 30 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.7 }}
-              onSubmit={handleSubmit}
-              className="flex flex-col gap-5 bg-sage rounded-3xl p-8 md:p-12 border border-sage-dark"
-            >
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div className="flex flex-col gap-2">
-                  <label className="text-[10px] tracking-[0.25em] uppercase text-warm-gray">Full Name *</label>
-                  <input
-                    name="name" type="text" required value={form.name} onChange={handleChange}
-                    placeholder="Your name"
-                    className="bg-white border border-cream-dark focus:border-teal rounded-xl px-4 py-3.5 text-charcoal text-sm outline-none transition-colors placeholder:text-warm-gray/40"
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-[10px] tracking-[0.25em] uppercase text-warm-gray">Email *</label>
-                  <input
-                    name="email" type="email" required value={form.email} onChange={handleChange}
-                    placeholder="your@email.com"
-                    className="bg-white border border-cream-dark focus:border-teal rounded-xl px-4 py-3.5 text-charcoal text-sm outline-none transition-colors placeholder:text-warm-gray/40"
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div className="flex flex-col gap-2">
-                  <label className="text-[10px] tracking-[0.25em] uppercase text-warm-gray">Phone</label>
-                  <input
-                    name="phone" type="tel" value={form.phone} onChange={handleChange}
-                    placeholder="+91 XXXXX XXXXX"
-                    className="bg-white border border-cream-dark focus:border-teal rounded-xl px-4 py-3.5 text-charcoal text-sm outline-none transition-colors placeholder:text-warm-gray/40"
-                  />
-                </div>
-                <div className="flex flex-col gap-2">
-                  <label className="text-[10px] tracking-[0.25em] uppercase text-warm-gray">City *</label>
-                  <input
-                    name="city" type="text" required value={form.city} onChange={handleChange}
-                    placeholder="Where are you based?"
-                    className="bg-white border border-cream-dark focus:border-teal rounded-xl px-4 py-3.5 text-charcoal text-sm outline-none transition-colors placeholder:text-warm-gray/40"
-                  />
-                </div>
-              </div>
-              <div className="flex flex-col gap-2">
-                <label className="text-[10px] tracking-[0.25em] uppercase text-warm-gray">
-                  Why do you want to come? *
-                </label>
-                <textarea
-                  name="why" required rows={5} value={form.why} onChange={handleChange}
-                  placeholder="No right answer. Just tell us what's true for you right now..."
-                  className="bg-white border border-cream-dark focus:border-teal rounded-xl px-4 py-3.5 text-charcoal text-sm outline-none transition-colors resize-none placeholder:text-warm-gray/40"
-                />
-              </div>
-              <button
-                type="submit" disabled={loading}
-                className="w-full py-4 bg-teal text-white text-xs tracking-[0.25em] uppercase rounded-xl hover:bg-teal-dark transition-colors duration-200 disabled:opacity-60 mt-2"
-              >
-                {loading ? 'Sending...' : 'Register Interest'}
-              </button>
-              <p className="text-center text-[11px] text-warm-gray/60">
-                Bus facility available from Delhi · Noida · Ghaziabad · Meerut · Gurugram.
+
+            {/* In-person */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }} whileInView={{ opacity: 1, y: 0 }}
+              viewport={vp} transition={{ duration: 0.75, delay: 0.1 }}
+              className="rounded-2xl p-10 border-2 flex flex-col"
+              style={{ borderColor: '#007D78' }}>
+              <p className="text-[10px] tracking-[0.35em] uppercase text-teal font-semibold mb-4">
+                In-Person
               </p>
-            </motion.form>
-          )}
+              <h3 className="font-display text-3xl text-charcoal font-light mb-2">Register in Delhi NCR</h3>
+              <p className="text-charcoal/55 italic text-sm mb-8">
+                Drop by selected pickup points across Delhi NCR. Talk to our team in person.
+              </p>
+              <div className="space-y-3 mb-10 flex-1">
+                {['Available across Delhi, Noida, Gurugram, Ghaziabad, Greater Noida, Meerut, Khatauli, Khekda',
+                  'Same ₹500 fee', 'In-person assistance from our team'].map(item => (
+                  <div key={item} className="flex items-start gap-3">
+                    <Check size={15} className="text-teal flex-shrink-0 mt-0.5" />
+                    <span className="text-charcoal/70 text-sm">{item}</span>
+                  </div>
+                ))}
+              </div>
+              <a href="mailto:Teamsahajspirit@gmail.com"
+                className="w-fit px-6 py-3 border border-teal text-teal text-sm font-medium rounded-full hover:bg-teal hover:text-white transition-all duration-300">
+                View Pickup Points &nbsp;→
+              </a>
+            </motion.div>
+          </div>
+
+          <motion.p
+            initial={{ opacity: 0 }} whileInView={{ opacity: 1 }}
+            viewport={vp} transition={{ duration: 1, delay: 0.2 }}
+            className="text-center text-charcoal/40 text-sm italic mt-10">
+            Once registered, you&apos;ll get a wristband at the venue. That&apos;s your ticket in.
+          </motion.p>
         </div>
       </section>
+
+      {/* ─── MILESTONES ───────────────────────────────────────── */}
+      <section className="py-24 md:py-32 px-6 md:px-12 lg:px-20" style={{ background: '#FAF8F3' }}>
+        <div className="max-w-5xl mx-auto">
+          <motion.div initial="hidden" whileInView="visible" viewport={vp} variants={stagger}
+            className="mb-16">
+            <motion.p variants={fadeUp}
+              className="text-[10px] tracking-[0.45em] uppercase text-teal font-semibold mb-6">
+              Milestones
+            </motion.p>
+            <motion.h2 variants={fadeUp}
+              className="font-display text-5xl md:text-6xl lg:text-7xl text-charcoal">
+              The road to October.
+            </motion.h2>
+          </motion.div>
+
+          <motion.div
+            initial={{ opacity: 0, y: 20 }} whileInView={{ opacity: 1, y: 0 }}
+            viewport={vp} transition={{ duration: 0.8 }}
+            className="relative">
+            {/* Connecting line */}
+            <div className="absolute top-4 left-0 right-0 h-px bg-charcoal/12 hidden sm:block" />
+            <div className="flex flex-col sm:flex-row sm:justify-between gap-10 sm:gap-0">
+              {milestones.map(({ date, label, done, active }) => (
+                <div key={date} className="flex flex-col items-start sm:items-center sm:text-center">
+                  {/* Circle */}
+                  <div className={`relative z-10 w-8 h-8 rounded-full flex items-center justify-center mb-4 ${
+                    done   ? 'bg-teal'
+                    : active ? 'border-2 border-teal bg-white'
+                    :          'border-2 bg-white' } `}
+                    style={ !done && !active ? { borderColor: '#27211D30' } : {} }>
+                    {done && <Check size={14} className="text-white" strokeWidth={2.5} />}
+                  </div>
+                  <p className={`font-display text-lg font-light ${active ? 'text-teal' : 'text-charcoal'}`}>
+                    {date}
+                  </p>
+                  <p className="text-xs text-warm-gray mt-1 max-w-[120px]">{label}</p>
+                </div>
+              ))}
+            </div>
+          </motion.div>
+        </div>
+      </section>
+
     </main>
   );
 }
