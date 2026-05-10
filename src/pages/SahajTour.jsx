@@ -3,7 +3,7 @@ import { MapPin, Clock, Check, Coffee, Home as HomeIcon, Bus, Users, Package, Gl
 
 const TOUR_IMG = {
   hero:      'https://images.unsplash.com/photo-1517457373958-b7bdd4587205?auto=format&fit=crop&w=1920&q=80',
-  about:     '/about2.png',
+  about:     'https://images.unsplash.com/photo-1506126613408-eca07ce68773?auto=format&fit=crop&w=1200&q=80',
   awaken:    '/about1.png',
   wander:    '/tour2.png',
   comeAlive: '/tour3.jpg',
