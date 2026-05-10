@@ -1,4 +1,5 @@
-import { motion } from 'framer-motion';
+import { useRef } from 'react';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import { Link } from 'react-router-dom';
 import { ArrowDown } from 'lucide-react';
 
@@ -47,61 +48,89 @@ const symbolMeanings = [
 ];
 
 export default function Home() {
+  const heroRingRef = useRef(null);
+  const { scrollYProgress } = useScroll({
+    target: heroRingRef,
+    offset: ['start start', 'end start'],
+  });
+  const ringRotation  = useTransform(scrollYProgress, [0, 1], [0, 360]);
+  const imgCounter    = useTransform(ringRotation, v => -v);
+
   return (
     <main>
 
       {/* ─── HERO ─────────────────────────────────────────────── */}
       <section
-        className="relative min-h-screen flex flex-col lg:flex-row"
+        className="relative flex flex-col lg:flex-row lg:min-h-screen"
         style={{ background: 'linear-gradient(118deg,#ffffff 0%,#f2fbf9 25%,#d0ece8 55%,#bde3dd 80%,#afdbd5 100%)' }}
       >
-        {/* LEFT: Logo + circles */}
-        <div className="relative w-full lg:w-1/2 min-h-[62vh] lg:min-h-screen">
+        {/* ── MOBILE: tall scroll area — ring rotates on scroll ── */}
+        <div ref={heroRingRef} className="lg:hidden relative" style={{ height: '280vh' }}>
+          <div className="sticky top-0 h-screen flex flex-col items-center justify-center gap-6 px-6 pt-20 pb-10">
 
-          {/* MOBILE — orbital ring animation */}
-          <div className="lg:hidden absolute inset-0 flex items-center justify-center">
-            <div className="relative w-72 h-72">
-              {/* Subtle orbit ring guide */}
+            {/* Ring */}
+            <div className="relative w-72 h-72 flex-shrink-0">
               <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
                 <div className="w-[214px] h-[214px] rounded-full border border-teal/20" />
               </div>
-              {/* Rotating container */}
-              <motion.div
-                className="absolute inset-0"
-                animate={{ rotate: 360 }}
-                transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}
-              >
+              <motion.div className="absolute inset-0" style={{ rotate: ringRotation }}>
                 {floatCircles.map(({ src }, i) => {
                   const S = 72, R = 107, H = 144;
                   const a = (i / 5) * 2 * Math.PI;
                   return (
                     <div key={i} className="absolute"
-                      style={{
-                        width: S, height: S,
+                      style={{ width: S, height: S,
                         top:  H - S / 2 + (-R * Math.cos(a)),
-                        left: H - S / 2 + ( R * Math.sin(a)),
-                      }}>
+                        left: H - S / 2 + ( R * Math.sin(a)) }}>
                       <motion.div
                         className="w-full h-full rounded-full overflow-hidden border-[3px] border-white"
-                        style={{ boxShadow: '0 6px 20px rgba(0,100,95,0.18)' }}
-                        animate={{ rotate: -360 }}
-                        transition={{ duration: 14, repeat: Infinity, ease: 'linear' }}>
+                        style={{ rotate: imgCounter, boxShadow: '0 6px 20px rgba(0,100,95,0.18)' }}>
                         <img src={src} alt="" className="w-full h-full object-cover" />
                       </motion.div>
                     </div>
                   );
                 })}
               </motion.div>
-              {/* Logo center */}
               <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-36 h-36 z-10">
                 <img src="/logo.png" alt="Sahaj Spirit" className="w-full h-full object-contain" />
               </div>
             </div>
-          </div>
 
-          {/* DESKTOP — all 5 circles static */}
+            {/* Text — visible in same sticky view */}
+            <div className="text-center max-w-xs">
+              <p className="text-[9px] tracking-[0.45em] uppercase text-teal font-semibold mb-4">
+                A Jain Youth Movement &nbsp;·&nbsp; Since 2024
+              </p>
+              <h1 className="font-display text-[2.6rem] text-charcoal leading-[1.05] mb-6">
+                You are not broken.<br />
+                You are just forgetting<br />
+                <em style={{ color: '#007D78', fontStyle: 'italic', fontWeight: 700 }}>who you are.</em>
+              </h1>
+              <div className="flex flex-col gap-3 items-center">
+                <Link to="/sahaj-tour"
+                  className="px-8 py-3.5 bg-orange text-white text-sm font-medium rounded-full"
+                  style={{ boxShadow: '0 8px 24px rgba(212,113,42,0.38)' }}>
+                  Experience Sahaj Tour '26 &nbsp;→
+                </Link>
+                <Link to="/about" className="text-sm text-charcoal/55 font-medium">
+                  Learn the philosophy &nbsp;↓
+                </Link>
+              </div>
+            </div>
+
+            {/* Scroll hint fades out after scrolling */}
+            <motion.p
+              className="absolute bottom-6 text-[9px] tracking-[0.3em] uppercase text-charcoal/30"
+              style={{ opacity: useTransform(scrollYProgress, [0, 0.1], [1, 0]) }}>
+              Scroll to rotate
+            </motion.p>
+          </div>
+        </div>
+
+        {/* ── DESKTOP LEFT: Logo + static circles ─────────────── */}
+        <div className="hidden lg:block relative lg:w-1/2 lg:min-h-screen">
           {floatCircles.map(({ src, size, top, left }, i) => (
-            <div key={`d-${i}`} className="hidden lg:block absolute z-20"
+            <div key={`d-${i}`} className="absolute z-20"
               style={{ width: size, height: size, top, left }}>
               <div className="w-full h-full rounded-full overflow-hidden border-[4px] border-white"
                 style={{ boxShadow: '0 10px 36px rgba(0,100,95,0.18)' }}>
@@ -109,32 +138,30 @@ export default function Home() {
               </div>
             </div>
           ))}
-
-          {/* Logo — desktop */}
-          <div className="hidden lg:block absolute z-10"
+          <div className="absolute z-10"
             style={{ width: 268, height: 268, top: '28%', left: '16%' }}>
             <img src="/logo.png" alt="Sahaj Spirit" className="w-full h-full object-contain" />
           </div>
         </div>
 
-        {/* RIGHT: Text */}
-        <div className="relative w-full lg:w-1/2 flex items-center px-8 md:px-12 lg:px-16 pt-8 pb-24 lg:py-0 lg:pt-20">
+        {/* ── DESKTOP RIGHT: Text ──────────────────────────────── */}
+        <div className="hidden lg:flex relative lg:w-1/2 items-center px-16 pt-20">
           <motion.div className="max-w-xl" initial="hidden" animate="visible" variants={stagger}>
             <motion.p variants={fadeUp}
-              className="text-[10px] tracking-[0.48em] uppercase text-teal font-semibold mb-7 text-center lg:text-left">
-              <span className="block lg:inline">A Jain Youth Movement</span>
-              <span className="block lg:inline lg:before:content-['_·_']">Since 2024</span>
+              className="text-[10px] tracking-[0.48em] uppercase text-teal font-semibold mb-7">
+              <span>A Jain Youth Movement</span>
+              <span className="before:content-['_·_']">Since 2024</span>
             </motion.p>
             <motion.h1 variants={fadeUp}
-              className="font-display text-[3.2rem] md:text-[4rem] lg:text-[4.8rem] xl:text-[5.4rem] text-charcoal leading-[1.03] mb-8 text-center lg:text-left">
+              className="font-display text-[4.8rem] xl:text-[5.4rem] text-charcoal leading-[1.03] mb-8">
               You are not broken.<br />
               You are just<br />
               forgetting<br />
               <em style={{ color: '#007D78', fontStyle: 'italic', fontWeight: 700 }}>who you are.</em>
             </motion.h1>
-            <motion.div variants={fadeUp} className="flex flex-wrap gap-5 items-center justify-center lg:justify-start">
+            <motion.div variants={fadeUp} className="flex gap-5 items-center">
               <Link to="/sahaj-tour"
-                className="px-8 py-4 bg-orange text-white text-sm font-medium rounded-full transition-all duration-300 hover:brightness-110 hover:-translate-y-0.5"
+                className="px-8 py-4 bg-orange text-white text-sm font-medium rounded-full hover:brightness-110 transition-all duration-300 hover:-translate-y-0.5"
                 style={{ boxShadow: '0 8px 28px rgba(212,113,42,0.38)' }}>
                 Experience Sahaj Tour '26 &nbsp;→
               </Link>
