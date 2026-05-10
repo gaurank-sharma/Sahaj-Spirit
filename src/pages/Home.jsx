@@ -25,8 +25,8 @@ const vp = { once: true, margin: '-80px' };
 
 // Desktop: size/top/left   |   Mobile: mSize/mTop/mLeft
 const floatCircles = [
-  { src: IMG.storytelling, size: 148, top: '7%',  left: '25%', mSize: 85, mTop: '15%', mLeft: '27%' },
-  { src: IMG.poetry,       size: 148, top: '15%', left: '49%', mSize: 85, mTop: '19%', mLeft: '55%' },
+  { src: IMG.storytelling, size: 148, top: '12%', left: '25%', mSize: 85, mTop: '15%', mLeft: '27%' },
+  { src: IMG.poetry,       size: 148, top: '18%', left: '49%', mSize: 85, mTop: '19%', mLeft: '55%' },
   { src: IMG.interactive,  size: 148, top: '34%', left: '60%', mSize: 85, mTop: '37%', mLeft: '67%' },
   { src: IMG.community,    size: 148, top: '55%', left: '49%', mSize: 85, mTop: '52%', mLeft: '53%' },
   { src: IMG.hero,         size: 148, top: '64%', left: '25%', mSize: 85, mTop: '56%', mLeft: '25%' },
@@ -66,7 +66,7 @@ export default function Home() {
       >
         {/* ── MOBILE: tall scroll area — ring rotates on scroll ── */}
         <div ref={heroRingRef} className="lg:hidden relative" style={{ height: '280vh' }}>
-          <div className="sticky top-0 h-screen flex flex-col items-center justify-center gap-6 px-6 pt-20 pb-10">
+          <div className="sticky top-20 flex flex-col items-center justify-center gap-6 px-6 pb-8" style={{ height: 'calc(100vh - 5rem)' }}>
 
             {/* Ring */}
             <div className="relative w-72 h-72 flex-shrink-0">
